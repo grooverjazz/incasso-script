@@ -163,7 +163,7 @@ def add_lists_to_ledenadmin(
 
                 # Verkrijg een beschrijving
                 price_str_legible: str = "€" + cents_to_str(price)
-                description: str = f"{price_str_legible} ({field})"
+                description: str = f"{price_str_legible} ({fieldname})"
 
                 # Vul de beschrijving aan als het een 'onbekend' lid is
                 if member_id == "-1":
