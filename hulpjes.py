@@ -144,22 +144,17 @@ def add_lists_to_ledenadmin(
             # Pak de lid-info uit de lijst
             list_member: str[dict, any] = list_members[member_id]
 
-            # Check of het lid in de ledenadmin staat
-            if not (member_id in ledenadmin_members):
-                print((depth + 1) * "   " + f"Lid {list_member[FIELD_NAME]} ({member_id}) staat niet in de ledenadmin!")
-                member_id = "-1"
+            # Ga door alle kolommen van de lijst, houd het totaal en de beschrijving bij
+            member_totaal: int = 0
+            member_beschrijving: str = ""
 
-            # Pak de lid-info uit de ledenadmin
-            ledenadmin_member: dict[str, any] = ledenadmin_members[member_id]
-            
-            # Ga door alle kolommen van de lijst
             for fieldname in new_fields:
                 # Verkrijg een prijs en sla het incassoveld misschien over
                 price: int = str_to_cents(str(list_member[fieldname]))
                 if price == 0: continue
 
                 # Voeg de prijs toe aan het lid
-                ledenadmin_member[totaal] += price
+                member_totaal += price
 
                 # Verkrijg een beschrijving
                 price_str_legible: str = "€" + cents_to_str(price)
@@ -171,10 +166,24 @@ def add_lists_to_ledenadmin(
 
                 # Voeg de beschrijving toe aan het lid
                 #   (en een kommaatje waar nodig)
-                if ledenadmin_member[beschrijving] != "":
-                    ledenadmin_member[beschrijving] += ", "
+                if member_beschrijving != "":
+                    member_beschrijving += ", "
                 
-                ledenadmin_member[beschrijving] += description
+                member_beschrijving += description
+            
+            # Skip een lid wat geen geld betaalt
+            if member_totaal == 0: continue
+
+            # Check of het lid in de ledenadmin staat
+            if not (member_id in ledenadmin_members):
+                print((depth + 1) * "   " + f"Lid {list_member[FIELD_NAME]} ({member_id}) staat niet in de ledenadmin!")
+                member_id = "-1"
+
+            # Pak de lid-info uit de ledenadmin, voeg data toe
+            ledenadmin_member: dict[str, any] = ledenadmin_members[member_id]
+            ledenadmin_member[totaal] = member_totaal
+            ledenadmin_member[beschrijving] = member_beschrijving
+
     
     # Maak strings van totalen
     for member_id in ledenadmin_members:
