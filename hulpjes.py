@@ -181,8 +181,8 @@ def add_lists_to_ledenadmin(
 
             # Pak de lid-info uit de ledenadmin, voeg data toe
             ledenadmin_member: dict[str, any] = ledenadmin_members[member_id]
-            ledenadmin_member[totaal] = member_totaal
-            ledenadmin_member[beschrijving] = member_beschrijving
+            ledenadmin_member[totaal] += member_totaal
+            ledenadmin_member[beschrijving] += member_beschrijving
 
     
     # Maak strings van totalen
